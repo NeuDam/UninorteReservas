@@ -1,8 +1,8 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import './index.css'
-import { Slider, TextField } from '@mui/material'
-import { TimePicker } from '@mui/x-date-pickers'
+import { Divider, Modal, Slider } from '@mui/material'
 import useApi from '../hooks/useApi'
+import { useLoader } from '../../components/Loader/Loader'
 
 function Home() {
 
@@ -13,6 +13,11 @@ function Home() {
   const [selectedRoom, setSelectedRoom] = React.useState({room_id: '', room_name: ''})
   const [persons, setPersons] = React.useState(2)
   const [students, setStudents] = React.useState("")
+  const [showModal, setShowModal] = React.useState(false)
+
+  const {setActiveLoader} = useLoader()
+
+  const studentName = JSON.parse(sessionStorage.getItem('data')).student_name.split(' ').slice(0, 2).join(' ')
 
   function generateTimeSlots() {
     const now = new Date();
@@ -48,7 +53,9 @@ function Home() {
       duration: duration,
       cookies: JSON.parse(sessionStorage.getItem('data')).cookie
     }
+    setActiveLoader(true)
     const {status, data} = await useApi({url: '/find_rooms', method: 'POST', body: bodyData})
+    setActiveLoader(false)
     if (status === 200) {
       setHasSearch(true)
       setRooms(data)
@@ -78,6 +85,8 @@ function Home() {
       }
     }
 
+    setActiveLoader(true)
+
     let {status, data} = await useApi({url: '/select_room', method: 'POST', body: bodyData})
 
     if (status === 200) {
@@ -94,6 +103,7 @@ function Home() {
         }
       }
       let {status, data} = await useApi({url: '/reserve_room', method: 'POST', body: bodyData})
+      setActiveLoader(false)
       if ((status === 200) && (data.status === true)) {
         setRooms([])
         setHasSearch(false)
@@ -106,6 +116,21 @@ function Home() {
       }
     }
 
+  }
+
+  const handleCancelReservations = async () => {
+    const bodyData = {
+      cookies: JSON.parse(sessionStorage.getItem('data')).cookie
+    }
+    setActiveLoader(true)
+    const {status, data} = await useApi({url: '/cancel_booking', method: 'POST', body: bodyData})
+    setActiveLoader(false)
+    setShowModal(false)
+    if (status === 200) {
+      alert('Reservas canceladas con éxito')
+    } else {
+      alert('Hubo un error al cancelar las reservas')
+    }
   }
 
   const marks = [
@@ -126,12 +151,35 @@ function Home() {
       label: '2 hrs',
     }
   ]
+  useEffect(() => {
+    setHasSearch(false)
+    setRooms([])
+    setSelectedRoom({room_id: '', room_name: ''})
+  }, [duration, value])
 
   return (
+    <>
+    {showModal && (
+      <div className="container-modal">
+        <div className="modal">
+          <h2>Eliminar reservas</h2>
+          <span>¿Estás segur@ que quieres cancelar <b>todas</b> tus reservas?</span>
+          <div className='container-buttons'>
+            <button className='button-cancel button-base' onClick={() => setShowModal(false)}>Cancelar</button>
+            <button className='button-delete-confirm button-base' onClick={handleCancelReservations}>Eliminar</button>
+          </div>
+        </div>
+      </div>
+    )}
     <div className='container-reserva'>
       <header>
-        <h2>Realizar Reserva</h2>
-        <span>Llena los datos para continuar con la reserva</span>
+        <div>
+          <h2>{studentName}</h2>
+          <span>Llena los datos para continuar con la reserva</span>
+        </div>
+        <button className='button-delete' onClick={() => setShowModal(true)}>
+          <box-icon type='solid' name='trash-alt' color="#ff0000"></box-icon>
+        </button>
       </header>
       <div className='body-reserva'>
         <section>
@@ -160,12 +208,19 @@ function Home() {
         </section>
         <button className='search-btn' onClick={handleGetAvailableRooms}>Buscar cubículos</button>
         {hasSearch && (<section>
+          <Divider/>
           <h4>Cubículos disponibles</h4>
-          {rooms.length === 0 ? <span className='information-message'>No hay cubículos disponibles</span> : rooms.map(room => (<article key={room.id} className={`room-card ${room.room_id === selectedRoom.room_id ? 'selected_room': ''}`} onClick={() => setSelectedRoom(room)}>{room.room_name}</article>))}
+          {rooms.length === 0 ? <span className='information-message'>No hay cubículos disponibles</span> : rooms.map(room => (<article key={room.id} className={`room-card ${room.room_id === selectedRoom.room_id ? 'selected_room': ''}`} onClick={() => setSelectedRoom(room)}>
+            <div className={`symbol-select ${room.room_id === selectedRoom.room_id && 'symbol-selected'}`}></div>
+            <span>
+              {room.room_name}
+            </span>
+            </article>))}
         </section>)}
         {
           (selectedRoom.room_id !== "" && rooms.length !== 0) && (
             <section>
+              <Divider/>
               <h4>Detalles de la reserva</h4>
               <div>
                 <span className='label-dec'>Número de personas ({persons})</span>
@@ -177,7 +232,7 @@ function Home() {
               </div>
               <div>
                 <span className='label-dec'>Estudiantes y códigos</span>
-                <input placeholder='Juan... 2020020202' className='multi-input' maxLength={100} value={students} onChange={(e) => setStudents(e.target.value)}/>
+                <input placeholder='Juan 2020020202' className='multi-input' maxLength={100} value={students} onChange={(e) => setStudents(e.target.value)}/>
               </div>
               <button className='reserva-btn' onClick={handleReserveRoom}>Reservar</button>
             </section>
@@ -185,6 +240,7 @@ function Home() {
         }
       </div>
     </div>
+    </>
   )
 }
 

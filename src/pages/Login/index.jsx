@@ -2,18 +2,25 @@ import React from 'react'
 import './index.css'
 import useApi from '../hooks/useApi'
 import { useNavigate } from 'react-router-dom'
+import { useLoader } from '../../components/Loader/Loader'
 
 function Login() {
 
   const navigate = useNavigate()
+
+  const {setActiveLoader} = useLoader()
 
   const handleSubmit = async (e) => {
     e.preventDefault()
     const form = new FormData(e.target)
     const username = form.get('username')
     const password = form.get('password')
+
+    setActiveLoader(true)
     const {status, data} = await useApi({url: '/login', method: 'POST', body: {username, password}})
     
+    setActiveLoader(false)
+
     if (status === 200) {
       console.log(data)
       sessionStorage.setItem('data', JSON.stringify(data))

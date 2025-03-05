@@ -4,7 +4,6 @@ main{
   display: flex;
   justify-content: center;
   align-items: center;
-  /* DEGRADADO DE FONDO USANDO GLOBALS CSS VARIABLES, EFECTO MORADO ,NEGRO*/
 }
 
 .form-login{
@@ -17,8 +16,8 @@ main{
   backdrop-filter: blur(20px) saturate(180%);
   padding: 20px;
   border-radius: 12px;
-  max-width: 100%;
   min-height: 30vh;
+  width: 80%;
   box-shadow: 0 0 25px  #3333330b;
   gap: .5em;
   display: flex;

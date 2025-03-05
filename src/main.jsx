@@ -6,17 +6,20 @@ import 'boxicons'
 import AuthLayout from './pages/AuthLayout.jsx'
 import { Route, BrowserRouter as Router, Routes } from 'react-router-dom'
 import Home from './pages/Home/index.jsx'
+import { LoaderLayout } from './components/Loader/Loader.jsx'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <Router>
-      <Routes>
-        <Route path="/login" element={<Login />} />
-        <Route element={<AuthLayout />}>
-          <Route path="/home" element={<Home />} />
-        </Route>
-        <Route path="*" element={<AuthLayout />} />
-      </Routes>
-    </Router>
+    <LoaderLayout>
+      <Router>
+        <Routes>
+          <Route path="/login" element={<Login />} />
+          <Route element={<AuthLayout />}>
+            <Route path="/home" element={<Home />} />
+          </Route>
+          <Route path="*" element={<AuthLayout />} />
+        </Routes>
+      </Router>
+    </LoaderLayout>
   </StrictMode>,
 )
