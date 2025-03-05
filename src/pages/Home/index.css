@@ -1,0 +1,127 @@
+.container-reserva{
+  width: 90%;
+  margin-top: 3vh;
+  margin-bottom: 3vh;
+  background-color: #fff;
+  margin-inline: auto;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 0 25px  #3333332c;
+  h2{
+    margin: 0;
+  }
+  @media (min-width: 768px) {
+    width: 45%;
+  }
+  h3{
+    font-weight: 500;
+    font-size: calc(8px + 0.5vw);
+  }
+  .select{
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    background-color: #f5f5f5;
+    outline: 1px solid #33333355;
+  }
+  h4{
+    text-align: center;
+  }
+}
+
+.container-reserva header{
+  background-color: var(--cyan-color);
+  padding: 10px;
+}
+
+.body-reserva{ 
+  padding: 20px 30px;
+}
+
+.search-btn{
+  background-color: var(--primary);
+  color: white;
+  border: none;
+  min-width: 40%;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.7s;
+  &:hover{
+    background-color: var(--secondary);
+  }
+  margin-inline: auto;
+  display: block;
+  margin-top: 60px;
+}
+
+.room-card{
+  background-color: #f5f5f5;
+  padding: 20px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+  box-shadow: 0 0 25px  #3333332c;
+  cursor: pointer;
+}
+
+.selected_room{
+  outline: 1px solid var(--primary);
+}
+
+.container-persons{
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 30px;
+}
+
+.label-dec{
+  margin-bottom: 15px;
+  display: block;
+}
+
+.increment-button{
+  background-color: var(--primary);
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.7s;
+  &:hover{
+    background-color: var(--secondary);
+  }
+}
+
+.information-message{
+  text-align: center;
+  width: 100%;
+  margin-inline: auto;
+  display: block;
+}
+
+.multi-input{
+  height: 60px;
+  width: 100%;
+  margin-bottom: 20px;
+  border: none;
+  outline: 1px solid #33333355;
+  border-radius: 5px;
+  padding-inline: 10px;
+}
+
+.reserva-btn{
+  background-color: var(--primary);
+  color: white;
+  border: none;
+  padding: 10px 30px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.7s;
+  &:hover{
+    background-color: var(--secondary);
+  }
+  margin-inline: auto;
+  display: block;
+}
